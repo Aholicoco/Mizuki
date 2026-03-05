@@ -188,3 +188,25 @@ Make the emoji component display correctly when there are too many emoji packs
   position: relative;
   z-index: 100;
 }
+
+/* 隐藏整个“网址/Link”选项（优先使用父容器选择，兼容现代浏览器） */
+.tk-meta-input .el-input:has(.el-input__inner[name="link"]),
+.tk-meta-input .el-input:has(input[name="link"]),
+.twikoo .el-input:has(.el-input__inner[name="link"]),
+.twikoo .el-input:has(input[name="link"]) {
+  display: none !important;
+}
+
+/* 回退：对于不支持 :has() 的浏览器，尽量隐藏 label 和输入 */
+.tk-meta-input .el-input .el-input__inner[name="link"],
+.tk-meta-input input[name="link"],
+.twikoo .el-input .el-input__inner[name="link"],
+.twikoo input[name="link"] {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
