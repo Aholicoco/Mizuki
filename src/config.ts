@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
 	lang: SITE_LANG,
 
 	themeColor: {
-		hue: 265, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
+		hue: 250, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
 		fixed: true, // 对访问者隐藏主题色选择器
 	},
 
@@ -153,7 +153,7 @@ export const siteConfig: SiteConfig = {
 		// 项目地址:https://github.com/matsuzaka-yuki/PicFlow-API
 		// 请自行搭建API
 
-	/* 	homeText: {
+		/* 	homeText: {
 			enable: true, // 在主页显示自定义文本
 			title: "Novo的菠萝小屋", // 主页横幅主标题
 
@@ -612,23 +612,27 @@ export const sakuraConfig: SakuraConfig = {
 // Pio 看板娘配置
 export const pioConfig: import("./types/config").PioConfig = {
 	enable: true, // 启用看板娘
-	models: ["/pio/models/pio/model.json"], // 默认模型路径
-	position: "left", // 模型位置
+	models: [
+		"/pio/models/pio/model_default_costume.json",
+		"/pio/models/pio/model_pajamas_costume.json",
+		"/pio/models/pio/model_school_costume.json",
+	], // 可切换的模型路径
+	position: "left", // 默认位置在右侧
 	width: 280, // 默认宽度
 	height: 250, // 默认高度
 	mode: "draggable", // 默认为可拖拽模式
 	hiddenOnMobile: true, // 默认在移动设备上隐藏
 	dialog: {
-		welcome: "Welcome to Mizuki Website!", // 欢迎词
+		welcome: "欢迎来到 Novo 网站！", // 欢迎词
 		touch: [
-			"What are you doing?",
-			"Stop touching me!",
+			"你在干什么？",
+			"再摸我就报警了！",
 			"HENTAI!",
-			"Don't bully me like that!",
+			"不可以这样欺负我啦！",
 		], // 触摸提示
-		home: "Click here to go back to homepage!", // 首页提示
-		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
-		close: "QWQ See you next time~", // 关闭提示
+		home: "点击这里回到首页！", // 首页提示
+		skin: ["想看看我的新衣服吗？", "新衣服真漂亮~"], // 换装提示
+		close: "QWQ 下次再见吧~", // 关闭提示
 		link: "https://github.com/matsuzaka-yuki/Mizuki", // 关于链接
 	},
 };
