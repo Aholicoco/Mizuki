@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:blog.brmys.cn)",
+      "Bash(curl -s -L \"https://2x.nz/posts/cf-fastip/\" -A \"Mozilla/5.0\")",
+      "Bash(curl -s -L \"https://blog.brmys.cn/cf-pages-worker-domain\" -A \"Mozilla/5.0\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\27262\\.claude\\projects\\f--XJJ-VScode-Project-Mizuki\\90f966a0-9448-41f0-9f4c-394a7074d7fd\\tool-results"
+    ]
+  }
+}
