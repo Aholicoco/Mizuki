@@ -249,8 +249,10 @@ addEventListener('fetch', event => {
 #### 3. 添加worker路由，完成worker和优选域名/IP的绑定
 ![配图](../../assets/posts/cloudflare-ip-optimization/proxy-router.webp)
 
-#### 4. 添加worker路由
-1. 原R2桶域名访问图片延迟200ms https://twikoo.r2.novoai.top/2026/03/0a81d686ef428d9bcb02d2c477b0822b.webp 
-2. 使用worker加速后的代理域名访问同一图片延迟50ms https://proxy.novoai.top/2026/03/0a81d686ef428d9bcb02d2c477b0822b.webp
+#### 4. 图片访问测速
+1. 原R2桶域名访问图片延迟200ms 
+- https://twikoo.r2.novoai.top/2026/03/0a81d686ef428d9bcb02d2c477b0822b.webp 
+2. 使用worker加速后的代理域名访问同一图片延迟50ms 
+- https://proxy.novoai.top/2026/03/0a81d686ef428d9bcb02d2c477b0822b.webp
 ---
 
