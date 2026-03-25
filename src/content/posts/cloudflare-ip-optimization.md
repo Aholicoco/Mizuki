@@ -164,7 +164,7 @@ Workers 的优选相对简单，使用 **Workers 路由** 功能即可。
 
 #### 2. 新建worker，写入代码后部署，用于代理
 代码可根据实际情况修改，通过worker域名加速访问节点后，再去构造R2桶域名请求，由于已经完成加速，后续请求都是在CF内网完成，速度极快
-```ruby
+```javascript
 const R2_DOMAIN = 'twikoo.r2.novoai.top'; //改成你的R2桶域名
 const ALLOWED_DOMAINS = ['blog.novoai.top', 'www.blog.novoai.top']; // 允许的域名列表
 
