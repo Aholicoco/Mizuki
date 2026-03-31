@@ -436,6 +436,7 @@ export type FullscreenWallpaperConfig = {
 export type PioConfig = {
 	enable: boolean; // 是否启用看板娘
 	models?: string[]; // 模型文件路径数组
+	registryUrl?: string; // 远程模型注册表地址
 	position?: "left" | "right"; // 看板娘位置
 	width?: number; // 看板娘宽度
 	height?: number; // 看板娘高度

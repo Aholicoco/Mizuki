@@ -12,43 +12,56 @@
 
 var Paul_Pio = function (prop) {
 	const current = {
-		idol: 0,
+		modelIndex: 0,
+		outfitIndex: 0,
 		timeout: undefined,
 		menu: document.querySelector(".pio-container .pio-action"),
 		canvas: document.getElementById("pio"),
 		body: document.querySelector(".pio-container"),
 		root: document.location.origin + "/",
+		registryUrl: prop.registry || "/pio/models/registry.json",
+		modelsBaseUrl: null,
+		registry: null,
+		models: [],
 	};
 
-	// 工具通用函数
 	const tools = {
-		// 创建内容
 		create: (tag, options) => {
 			const el = document.createElement(tag);
 			options.class && (el.className = options.class);
-
 			return el;
 		},
-		// 随机内容
 		rand: (arr) => {
 			return arr[Math.floor(Math.random() * arr.length + 1) - 1];
 		},
-		// 是否为移动设备
 		isMobile: () => {
 			let ua = window.navigator.userAgent.toLowerCase();
 			ua = ua.indexOf("mobile") || ua.indexOf("android") || ua.indexOf("ios");
 
 			return window.innerWidth < 500 || ua !== -1;
 		},
+		getCurrentModel: () => current.models[current.modelIndex] || null,
+		getCurrentOutfit: () => {
+			const model = tools.getCurrentModel();
+			return model && model.outfits ? model.outfits[current.outfitIndex] || null : null;
+		},
+		hasMultipleModels: () => current.models.length > 1,
+		hasMultipleOutfits: () => {
+			const model = tools.getCurrentModel();
+			return !!(model && model.outfits && model.outfits.length > 1);
+		},
+		resolveUrl: (target, base) => new URL(target, base || document.location.href).toString(),
+		getGeneratedModelPath: (modelId, outfitId) =>
+			tools.resolveUrl(`${modelId}/generated/${outfitId}.json`, current.modelsBaseUrl),
 	};
 
 	const elements = {
 		home: tools.create("span", { class: "pio-home" }),
+		model: tools.create("span", { class: "pio-model" }),
 		skin: tools.create("span", { class: "pio-skin" }),
 		info: tools.create("span", { class: "pio-info" }),
 		night: tools.create("span", { class: "pio-night" }),
 		close: tools.create("span", { class: "pio-close" }),
-
 		dialog: tools.create("div", { class: "pio-dialog" }),
 		show: tools.create("div", { class: "pio-show" }),
 	};
@@ -56,23 +69,13 @@ var Paul_Pio = function (prop) {
 	current.body.appendChild(elements.dialog);
 	current.body.appendChild(elements.show);
 
-	/* - 方法 */
 	const modules = {
-		// 更换模型
-		idol: () => {
-			current.idol < prop.model.length - 1
-				? current.idol++
-				: (current.idol = 0);
-
-			return current.idol;
-		},
-		// 创建对话框方法
 		message: (text, options = {}) => {
 			const { dialog } = elements;
 
-			if (text.constructor === Array) {
+			if (text && text.constructor === Array) {
 				dialog.innerText = tools.rand(text);
-			} else if (text.constructor === String) {
+			} else if (text && text.constructor === String) {
 				dialog[options.html ? "innerHTML" : "innerText"] = text;
 			} else {
 				dialog.innerText = "输入内容出现问题了 X_X";
@@ -85,19 +88,141 @@ var Paul_Pio = function (prop) {
 				dialog.classList.remove("active");
 			}, options.time || 3000);
 		},
-		// 移除方法
 		destroy: () => {
 			this.initHidden();
 			localStorage.setItem("posterGirl", "0");
+		},
+		loadModel: async (modelIndex, outfitIndex, options = {}) => {
+			if (!current.models.length) return;
+
+			const nextModelIndex =
+				typeof modelIndex === "number" ? modelIndex : current.modelIndex;
+			const nextModel = current.models[nextModelIndex];
+
+			if (!nextModel || !nextModel.outfits || !nextModel.outfits.length) return;
+
+			const nextOutfitIndex =
+				typeof outfitIndex === "number" ? outfitIndex : current.outfitIndex;
+			const nextOutfit = nextModel.outfits[nextOutfitIndex];
+
+			if (!nextOutfit) return;
+
+			current.modelIndex = nextModelIndex;
+			current.outfitIndex = nextOutfitIndex;
+
+			if (nextOutfit.model) {
+				loadlive2d("pio", nextOutfit.model);
+			} else if (nextModel.id && nextOutfit.id) {
+				loadlive2d(
+					"pio",
+					tools.getGeneratedModelPath(nextModel.id, nextOutfit.id),
+				);
+			} else {
+				throw new Error("Outfit model config is invalid.");
+			}
+
+			if (options.message) {
+				modules.message(options.message);
+			}
+		},
+		switchModel: async () => {
+			if (!tools.hasMultipleModels()) return;
+
+			const nextIndex =
+				current.modelIndex < current.models.length - 1 ? current.modelIndex + 1 : 0;
+			await modules.loadModel(nextIndex, 0, {
+				message:
+					(prop.content.model && prop.content.model[1]) || "模型已经切换啦！",
+			});
+			action.buttons();
+		},
+		switchOutfit: async () => {
+			const model = tools.getCurrentModel();
+			if (!model || !model.outfits || model.outfits.length <= 1) {
+				modules.message("当前模型没有可切换的服装。");
+				return;
+			}
+
+			const nextIndex =
+				current.outfitIndex < model.outfits.length - 1 ? current.outfitIndex + 1 : 0;
+			await modules.loadModel(current.modelIndex, nextIndex, {
+				message:
+					(prop.content.skin && prop.content.skin[1]) || "新衣服真漂亮~",
+			});
+		},
+		normalizeLegacyModels: () => {
+			const legacyModels = Array.isArray(prop.model) ? prop.model : [];
+			if (!legacyModels.length) return [];
+
+			return [
+				{
+					id: "legacy",
+					name: "默认模型",
+					outfits: legacyModels.map((modelPath, index) => ({
+						id: "legacy-" + index,
+						name: "服装 " + (index + 1),
+						model: modelPath,
+					})),
+				},
+			];
+		},
+		loadRegistry: async () => {
+			try {
+				const response = await fetch(current.registryUrl, { cache: "no-store" });
+				if (!response.ok) throw new Error("Registry request failed");
+
+				const registry = await response.json();
+				const modelIds = Array.isArray(registry.models) ? registry.models : [];
+				const models = [];
+				current.modelsBaseUrl = tools.resolveUrl("./", current.registryUrl);
+
+				for (const modelId of modelIds) {
+					const manifestUrl = tools.resolveUrl(
+						`${modelId}/manifest.json`,
+						current.modelsBaseUrl,
+					);
+					const manifestResponse = await fetch(manifestUrl, { cache: "no-store" });
+					if (!manifestResponse.ok) continue;
+
+					const manifest = await manifestResponse.json();
+					const outfits = Array.isArray(manifest.outfits) ? manifest.outfits : [];
+
+					if (!outfits.length) continue;
+
+					models.push({
+						id: manifest.id || modelId,
+						name: manifest.name || modelId,
+						outfits: outfits.map((outfit, index) => ({
+							id: outfit.id || "outfit-" + index,
+							name: outfit.name || "服装 " + (index + 1),
+							model: outfit.model || null,
+						})),
+					});
+				}
+
+				current.registry = registry;
+				current.models = models;
+
+				const defaultModelId = registry.defaultModel;
+				const defaultModelIndex = models.findIndex((item) => item.id === defaultModelId);
+				if (defaultModelIndex >= 0) {
+					current.modelIndex = defaultModelIndex;
+				}
+			} catch (error) {
+				console.warn("Pio registry load failed, fallback to legacy models.", error);
+				current.models = modules.normalizeLegacyModels();
+			}
+
+			if (!current.models.length) {
+				current.models = modules.normalizeLegacyModels();
+			}
 		},
 	};
 
 	this.destroy = modules.destroy;
 	this.message = modules.message;
 
-	/* - 提示操作 */
 	const action = {
-		// 欢迎
 		welcome: () => {
 			if (document.referrer && document.referrer.includes(current.root)) {
 				const referrer = document.createElement("a");
@@ -139,7 +264,6 @@ var Paul_Pio = function (prop) {
 				modules.message(prop.content.welcome || "欢迎来到本站！");
 			}
 		},
-		// 触摸
 		touch: () => {
 			current.canvas.onclick = () => {
 				modules.message(
@@ -152,22 +276,18 @@ var Paul_Pio = function (prop) {
 				);
 			};
 		},
-		// 右侧按钮
 		buttons: () => {
-			// 返回首页 - 使用 Swup 无刷新跳转
+			current.menu.innerHTML = "";
+
 			elements.home.onclick = () => {
-				// 检查 Swup 是否可用
 				if (typeof window !== "undefined" && window.swup) {
 					try {
-						// 使用 Swup 进行无刷新跳转
 						window.swup.navigate("/");
 					} catch (error) {
 						console.error("Swup navigation failed:", error);
-						// 降级到普通跳转
 						location.href = current.root;
 					}
 				} else {
-					// Swup 不可用时使用普通跳转
 					location.href = current.root;
 				}
 			};
@@ -176,22 +296,34 @@ var Paul_Pio = function (prop) {
 			};
 			current.menu.appendChild(elements.home);
 
-			// 更换模型
-			if (prop.model && prop.model.length > 1) {
-				elements.skin.onclick = () => {
-					loadlive2d("pio", prop.model[modules.idol()]);
+			if (tools.hasMultipleModels()) {
+				elements.model.onclick = () => {
+					modules.switchModel().catch((error) => {
+						console.error("Pio model switch failed:", error);
+					});
+				};
+				elements.model.onmouseover = () => {
+					modules.message(
+						(prop.content.model && prop.content.model[0]) || "想看看其他模型吗？",
+					);
+				};
+				current.menu.appendChild(elements.model);
+			}
 
-					prop.content.skin &&
-						modules.message(prop.content.skin[1] || "新衣服真漂亮~");
+			if (tools.hasMultipleOutfits()) {
+				elements.skin.onclick = () => {
+					modules.switchOutfit().catch((error) => {
+						console.error("Pio outfit switch failed:", error);
+					});
 				};
 				elements.skin.onmouseover = () => {
-					prop.content.skin &&
-						modules.message(prop.content.skin[0] || "想看看我的新衣服吗？");
+					modules.message(
+						(prop.content.skin && prop.content.skin[0]) || "想看看我的新衣服吗？",
+					);
 				};
 				current.menu.appendChild(elements.skin);
 			}
 
-			// 关于我
 			elements.info.onclick = () => {
 				window.open(
 					prop.content.link ||
@@ -203,7 +335,6 @@ var Paul_Pio = function (prop) {
 			};
 			current.menu.appendChild(elements.info);
 
-			// 夜间模式
 			if (prop.night) {
 				elements.night.onclick = () => {
 					typeof prop.night === "function" ? prop.night() : eval(prop.night);
@@ -214,7 +345,6 @@ var Paul_Pio = function (prop) {
 				current.menu.appendChild(elements.night);
 			}
 
-			// 关闭看板娘
 			elements.close.onclick = () => {
 				modules.destroy();
 			};
@@ -223,7 +353,6 @@ var Paul_Pio = function (prop) {
 			};
 			current.menu.appendChild(elements.close);
 		},
-		// 自定义选择器
 		custom: () => {
 			prop.content.custom.forEach((item) => {
 				const el = document.querySelectorAll(item.selector);
@@ -245,7 +374,7 @@ var Paul_Pio = function (prop) {
 						};
 					} else if (item.text) {
 						el[i].onmouseover = () => {
-							modules.message(t.text);
+							modules.message(item.text);
 						};
 					}
 				}
@@ -253,7 +382,6 @@ var Paul_Pio = function (prop) {
 		},
 	};
 
-	/* - 运行 */
 	const begin = {
 		static: () => {
 			current.body.classList.add("static");
@@ -267,7 +395,6 @@ var Paul_Pio = function (prop) {
 			action.buttons();
 
 			const body = current.body;
-
 			const location = {
 				x: 0,
 				y: 0,
@@ -301,34 +428,37 @@ var Paul_Pio = function (prop) {
 		},
 	};
 
-	// 运行
-	this.init = (noModel) => {
-		// 未隐藏 + 非手机版，出现操作功能
-		if (!(prop.hidden && tools.isMobile())) {
-			if (!noModel) {
-				action.welcome();
-				loadlive2d("pio", prop.model[0]);
-			}
+	this.init = async (noModel) => {
+		if (prop.hidden && tools.isMobile()) return;
 
-			switch (prop.mode) {
-				case "static":
-					begin.static();
-					break;
-				case "fixed":
-					begin.fixed();
-					break;
-				case "draggable":
-					begin.draggable();
-					break;
-			}
+		await modules.loadRegistry();
 
-			prop.content.custom && action.custom();
+		if (!current.models.length) {
+			modules.message("看板娘模型配置不存在。");
+			return;
 		}
+
+		if (!noModel) {
+			action.welcome();
+			await modules.loadModel(current.modelIndex, current.outfitIndex);
+		}
+
+		switch (prop.mode) {
+			case "static":
+				begin.static();
+				break;
+			case "fixed":
+				begin.fixed();
+				break;
+			case "draggable":
+				begin.draggable();
+				break;
+		}
+
+		prop.content.custom && action.custom();
 	};
 
-	// 隐藏状态
 	this.initHidden = () => {
-		// ! 清除预设好的间距
 		if (prop.mode === "draggable") {
 			current.body.style.top = null;
 			current.body.style.left = null;
@@ -341,7 +471,6 @@ var Paul_Pio = function (prop) {
 		elements.show.onclick = () => {
 			current.body.classList.remove("hidden");
 			localStorage.setItem("posterGirl", "1");
-
 			this.init();
 		};
 	};
@@ -349,7 +478,6 @@ var Paul_Pio = function (prop) {
 	localStorage.getItem("posterGirl") === "0" ? this.initHidden() : this.init();
 };
 
-// 请保留版权说明
 if (window.console && window.console.log) {
 	console.log(
 		"%c Pio %c https://paugram.com ",

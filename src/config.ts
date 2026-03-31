@@ -612,11 +612,7 @@ export const sakuraConfig: SakuraConfig = {
 // Pio 看板娘配置
 export const pioConfig: import("./types/config").PioConfig = {
 	enable: true, // 启用看板娘
-	models: [
-		"/pio/models/pio/model_default_costume.json",
-		"/pio/models/pio/model_pajamas_costume.json",
-		"/pio/models/pio/model_school_costume.json",
-	], // 可切换的模型路径
+	registryUrl: "https://live2d-models.novoai.top/pio/models/registry.json", // 模型注册表地址
 	position: "left", // 默认位置在右侧
 	width: 280, // 默认宽度
 	height: 250, // 默认高度

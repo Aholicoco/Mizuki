@@ -6,8 +6,8 @@ import { pioConfig } from "@/config";
 const pioOptions = {
 	mode: pioConfig.mode,
 	hidden: pioConfig.hiddenOnMobile,
+	registry: pioConfig.registryUrl,
 	content: pioConfig.dialog || {},
-	model: pioConfig.models || ["/pio/models/pio/model.json"],
 };
 
 // 全局Pio实例引用
