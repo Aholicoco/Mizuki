@@ -611,7 +611,7 @@ export const sakuraConfig: SakuraConfig = {
 
 // Pio 看板娘配置
 export const pioConfig: import("./types/config").PioConfig = {
-	enable: false, // 启用看板娘
+	enable: true, // 启用看板娘
 	models: [
 		"/pio/models/pio/model_default_costume.json",
 		"/pio/models/pio/model_pajamas_costume.json",

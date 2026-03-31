@@ -1,7 +1,7 @@
 ---
 title: Cloudflare Workers / Pages / R2 IP 优选指南
 published: 2026-03-24
-description: '使用 SaaS、Worker 以及各种方法对 Cloudflare Workers、Pages、R2 进行 IP 优选，提高网站可用性和访问速度'
+description: '使用Worker 以及各种方法对 Cloudflare Workers、Pages、R2 进行 IP 优选，提高网站可用性和访问速度'
 image: ''
 tags: [Cloudflare]
 category: '技术教程'

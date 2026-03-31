@@ -14,7 +14,9 @@
       "Bash(python ocr_pdf_to_word.py)",
       "Bash(ls -la f:/XJJ/VScode/Project/Mizuki/*.config.*)",
       "WebFetch(domain:blog.novoai.top)",
-      "Bash(cat \"f:/XJJ/VScode/Project/Mizuki/.wrangler\"/*)"
+      "Bash(cat \"f:/XJJ/VScode/Project/Mizuki/.wrangler\"/*)",
+      "Read(//f/XJJ/VScode/Project/live2d-widget/src/**)",
+      "Read(//f/XJJ/VScode/Project/live2d-widget/**)"
     ],
     "additionalDirectories": [
       "C:\\Users\\27262\\.claude\\projects\\f--XJJ-VScode-Project-Mizuki\\90f966a0-9448-41f0-9f4c-394a7074d7fd\\tool-results"

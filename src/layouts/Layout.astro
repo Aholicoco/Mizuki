@@ -409,7 +409,8 @@ if (siteConfig.font) {
 		{pioConfig.enable && <Pio client:idle />}
 
 		<!-- Live2D Widget -->
-		<script src="https://widget.novoai.top/autoload.js"></script>
+		<!-- 引入 Live2D Widget CDN 与博客布局冲突，暂时注释掉，先默认启用本地版本，后续再考虑是否需要提供 CDN 版本 -->
+		<!-- <script src="https://widget.novoai.top/autoload.js"></script> -->
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
