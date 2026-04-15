@@ -29,6 +29,21 @@ import { rehypeImageWidth } from "./src/plugins/rehype-image-width.mjs";
 
 import cloudflare from "@astrojs/cloudflare";
 
+const featurePagePathPrefixes = {
+	anime: ["/anime/"],
+	diary: ["/diary/"],
+	friends: ["/friends/"],
+	projects: ["/projects/"],
+	skills: ["/skills/"],
+	timeline: ["/timeline/"],
+	albums: ["/albums/"],
+	devices: ["/devices/"],
+};
+
+const disabledSitemapPathPrefixes = Object.entries(siteConfig.featurePages)
+	.filter(([, enabled]) => !enabled)
+	.flatMap(([feature]) => featurePagePathPrefixes[feature] || []);
+
 // https://astro.build/config
 export default defineConfig({
   site: siteConfig.siteURL,
@@ -114,7 +129,10 @@ export default defineConfig({
       svelte({
           preprocess: vitePreprocess(),
       }),
-      sitemap(),
+      sitemap({
+          filter: (page) =>
+              !disabledSitemapPathPrefixes.some((prefix) => page.includes(prefix)),
+      }),
 	],
 
   markdown: {
