@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from "astro";
 import Pagination from "../components/control/Pagination.astro";
 import PostPage from "../components/PostPage.astro";
+import { siteConfig } from "../config";
 import { PAGE_SIZE } from "../constants/constants";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { getSortedPosts } from "../utils/content-utils";
@@ -18,9 +19,17 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 
 const len = page.data.length;
+const isFirstPage = page.currentPage === 1;
+const homeDescription = "记录学习，分享技术与兴趣爱好。";
+const pageTitle = isFirstPage
+	? undefined
+	: `${siteConfig.title} 第 ${page.currentPage} 页`;
+const pageDescription = isFirstPage
+	? homeDescription
+	: `${homeDescription} 当前为第 ${page.currentPage} 页归档。`;
 ---
 
-<MainGridLayout>
-    <PostPage page={page}></PostPage>
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <PostPage page={page} suppressSearchSnippet={isFirstPage}></PostPage>
     <Pagination class="mx-auto onload-animation" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
 </MainGridLayout>
