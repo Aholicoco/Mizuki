@@ -24,7 +24,7 @@ const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UT
 export const siteConfig: SiteConfig = {
 	title: "Novo Blog", // 站点标题
 	subtitle: "记录与分享", // 站点副标题
-	siteURL: "https://blog.novoai.top/", // 请替换为你的站点URL，以斜杠结尾
+	siteURL: "https://blog.tobezz.com/", // 请替换为你的站点URL，以斜杠结尾
 	siteStartDate: "2026-01-01", // 站点开始运行日期，用于站点统计组件计算运行天数
 
 	timeZone: SITE_TIMEZONE,
@@ -629,7 +629,7 @@ export const pioConfig: import("./types/config").PioConfig = {
 		home: "点击这里回到首页！", // 首页提示
 		skin: ["想看看我的新衣服吗？", "新衣服真漂亮~"], // 换装提示
 		close: "QWQ 下次再见吧~", // 关闭提示
-		link: "https://github.com/matsuzaka-yuki/Mizuki", // 关于链接
+		link: "https://github.com/Aholicoco/Mizuki", // 关于链接
 	},
 };
 
