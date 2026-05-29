@@ -367,7 +367,12 @@ if (siteConfig.font) {
 		<!-- Pio 看板娘样式 - 仅在启用时加载 -->
 		{
 			pioConfig.enable && (
-				<link rel="stylesheet" href="/pio/static/pio.css" />
+				<>
+					<link rel="stylesheet" href="/pio/static/pio.css" />
+					{pioConfig.interaction?.enable && (
+						<link rel="stylesheet" href="/pio/static/pio-interaction.css" />
+				)}
+				</>
 			)
 		}
 

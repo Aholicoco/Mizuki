@@ -1300,7 +1300,7 @@
 				i++
 			)
 				try {
-					var e = C.getContext(t[i], { premultipliedAlpha: !0 });
+					var e = C.getContext(t[i], { premultipliedAlpha: !0, preserveDrawingBuffer: !0 });
 					if (e) return e;
 				} catch (t) {}
 			return null;

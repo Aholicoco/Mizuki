@@ -1,6 +1,7 @@
 <script>
 import { onDestroy, onMount } from "svelte";
 import { pioConfig } from "@/config";
+import { PioInteraction } from "@/utils/pio-interaction";
 
 // 将配置转换为 Pio 插件需要的格式
 const pioOptions = {
@@ -15,8 +16,7 @@ let pioInstance = null;
 let pioInitialized = false;
 let pioContainer;
 let pioCanvas;
-
-// 样式已通过 Layout.astro 静态引入，无需动态加载
+let interactionInstance = null;
 
 // 等待 DOM 加载完成后再初始化 Pio
 function initPio() {
@@ -27,6 +27,11 @@ function initPio() {
 				pioInstance = new Paul_Pio(pioOptions);
 				pioInitialized = true;
 				console.log("Pio initialized successfully (Svelte)");
+
+				// 初始化交互模块
+				if (pioConfig.interaction?.enable && pioInstance) {
+					initInteraction();
+				}
 			} else if (!pioContainer || !pioCanvas) {
 				console.warn("Pio DOM elements not found, retrying...");
 				setTimeout(initPio, 100);
@@ -40,13 +45,25 @@ function initPio() {
 	}
 }
 
-// 样式已通过 Layout.astro 静态引入，无需动态加载函数
+// 初始化交互模块
+function initInteraction() {
+	if (!pioConfig.interaction || !pioInstance) return;
+
+	try {
+		interactionInstance = new PioInteraction(
+			pioInstance,
+			pioConfig.interaction
+		);
+		interactionInstance.init();
+		console.log("PioInteraction initialized successfully");
+	} catch (e) {
+		console.error("PioInteraction initialization error:", e);
+	}
+}
 
 // 加载必要的脚本
 function loadPioAssets() {
 	if (typeof window === "undefined") return;
-
-	// 样式已通过 Layout.astro 静态引入
 
 	// 加载JS脚本
 	const loadScript = (src, id) => {
@@ -76,8 +93,6 @@ function loadPioAssets() {
 		});
 }
 
-// 样式已通过 Layout.astro 静态引入，无需页面切换监听
-
 onMount(() => {
 	if (!pioConfig.enable) return;
 
@@ -91,6 +106,11 @@ onMount(() => {
 });
 
 onDestroy(() => {
+	// 清理交互模块
+	if (interactionInstance) {
+		interactionInstance.destroy();
+		interactionInstance = null;
+	}
 	// Svelte 组件销毁时不需要清理 Pio 实例
 	// 因为我们希望它在页面切换时保持状态
 	console.log("Pio Svelte component destroyed (keeping instance alive)");

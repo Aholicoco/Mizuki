@@ -619,7 +619,8 @@ export const pioConfig: import("./types/config").PioConfig = {
 	mode: "draggable", // 默认为可拖拽模式
 	hiddenOnMobile: true, // 默认在移动设备上隐藏
 	dialog: {
-		welcome: "欢迎来到 Novo 网站！", // 欢迎词
+		// welcome 由 PioInteraction.enhancedWelcome 覆盖，此处仅作 Pio 内部 fallback
+		welcome: "欢迎来到 Novo 网站！",
 		touch: [
 			"你在干什么？",
 			"再摸我就报警了！",
@@ -630,6 +631,19 @@ export const pioConfig: import("./types/config").PioConfig = {
 		skin: ["想看看我的新衣服吗？", "新衣服真漂亮~"], // 换装提示
 		close: "QWQ 下次再见吧~", // 关闭提示
 		link: "https://github.com/Aholicoco/Mizuki", // 关于链接
+	},
+	interaction: {
+		enable: true,
+		tipsUrl: "/pio/static/pio-tips.json",
+		idleTimeout: 20000,
+		hitokoto: true,
+		hitokotoUrl: "https://v1.hitokoto.cn/?c=a&c=b&c=d&c=i&c=k",
+		photo: true,
+		consoleDetect: true,
+		visibilityChange: true,
+		copyDetect: true,
+		enhancedWelcome: true,
+		idleMessage: true,
 	},
 };
 

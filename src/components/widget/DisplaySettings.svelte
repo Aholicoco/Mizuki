@@ -5,9 +5,9 @@ import Icon from "@iconify/svelte";
 import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
 import { onMount } from "svelte";
 
-let hue = 250;
-let defaultHue = 250;
-let isMounted = false;
+let hue = $state(250);
+let defaultHue = $state(250);
+let isMounted = $state(false);
 
 function resetHue() {
 	hue = defaultHue;
@@ -19,9 +19,11 @@ onMount(() => {
 	hue = getHue();
 });
 
-$: if (isMounted && (hue || hue === 0)) {
-	setHue(hue);
-}
+$effect(() => {
+	if (isMounted && (hue || hue === 0)) {
+		setHue(hue);
+	}
+});
 </script>
 
 <div id="display-setting" class="float-panel float-panel-closed absolute transition-all w-80 right-4 px-4 py-4">
@@ -32,7 +34,7 @@ $: if (isMounted && (hue || hue === 0)) {
         >
             {i18n(I18nKey.themeColor)}
             <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
-                    class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue} on:click={resetHue}>
+                    class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue} onclick={resetHue}>
                 <div class="text-[var(--btn-content)]">
                     <Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                 </div>

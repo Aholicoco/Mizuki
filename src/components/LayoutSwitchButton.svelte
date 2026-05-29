@@ -6,21 +6,25 @@ import I18nKey from "@i18n/i18nKey";
 
 type LayoutMode = "list" | "grid";
 
-export let currentLayout: LayoutMode = "list";
+let { currentLayout = $bindable("list") }: { currentLayout?: LayoutMode } = $props();
 
-let mounted = false;
-let isSmallScreen = false;
-let isSwitching = false;
-let userPreference: LayoutMode = "list";
+let mounted = $state(false);
+let isSmallScreen = $state(false);
+let isSwitching = $state(false);
+let userPreference: LayoutMode = $state("list");
 let mediaQueryList: MediaQueryList | null = null;
 
 const BREAKPOINT = sidebarLayoutConfig.responsive?.breakpoints?.desktop ?? 1280;
 
-$: currentLayout = isSmallScreen ? "list" : userPreference;
+$effect(() => {
+    currentLayout = isSmallScreen ? "list" : userPreference;
+});
 
-$: if (mounted) {
-    dispatchLayoutChange(currentLayout);
-}
+$effect(() => {
+    if (mounted) {
+        dispatchLayoutChange(currentLayout);
+    }
+});
 
 function dispatchLayoutChange(layout: LayoutMode) {
     if (typeof window !== "undefined") {
@@ -51,7 +55,7 @@ function switchLayout() {
     isSwitching = true;
     const newLayout = userPreference === "list" ? "grid" : "list";
     userPreference = newLayout;
-    
+
     // 更新存储
     updateStorage(newLayout);
 }
@@ -69,10 +73,10 @@ onMount(() => {
 
     const sessionLayout = getSavedSessionLayout();
     const defaultLayout = siteConfig.postListLayout.defaultMode as LayoutMode;
-    
+
     if (sessionLayout === "list" || sessionLayout === "grid") {
         userPreference = sessionLayout;
-        
+
         if (localStorage.getItem("postListLayout") !== sessionLayout) {
             localStorage.setItem("postListLayout", sessionLayout);
         }
@@ -93,7 +97,7 @@ onMount(() => {
     const handleCustomEvent = (event: CustomEvent<{ layout: LayoutMode }>) => {
         if (event.detail?.layout) userPreference = event.detail.layout;
     };
-    
+
     const handleSwupEvent = () => {
         setTimeout(() => {
             const saved = getSavedSessionLayout();
@@ -106,7 +110,7 @@ onMount(() => {
     };
 
     window.addEventListener("layoutChange", handleCustomEvent as EventListener);
-    
+
     const setupSwup = () => {
         const swup = (window as any).swup;
         if (swup?.hooks) {
@@ -133,7 +137,7 @@ onMount(() => {
         }
         window.removeEventListener("layoutChange", handleCustomEvent as EventListener);
         window.removeEventListener("popstate", handleSwupEvent);
-        
+
         const swup = (window as any).swup;
         if (swup?.hooks) {
             swup.hooks.off("content:replace", handleSwupEvent);
@@ -149,13 +153,13 @@ onMount(() => {
     aria-label={userPreference === 'list' ? i18n(I18nKey.switchToGridMode) : i18n(I18nKey.switchToListMode)}
     aria-pressed={userPreference === 'grid'}
     class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 flex items-center justify-center theme-switch-btn {isSwitching ? 'switching' : ''}"
-    on:click={switchLayout}
+    onclick={switchLayout}
     disabled={isSwitching}
     title={userPreference === 'list' ? i18n(I18nKey.switchToGridMode) : i18n(I18nKey.switchToListMode)}
   >
     <div
         class="icon-container w-5 h-5 flex items-center justify-center relative"
-        on:animationend={onAnimationEnd}
+        onanimationend={onAnimationEnd}
     >
         {#if userPreference === 'list'}
             <svg class="w-5 h-5 icon-transition" fill="currentColor" viewBox="0 0 24 24">

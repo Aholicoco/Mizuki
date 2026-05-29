@@ -458,6 +458,9 @@ var Paul_Pio = function (prop) {
 		prop.content.custom && action.custom();
 	};
 
+	// 暴露 message 方法供 PioInteraction 调用
+	this.message = modules.message;
+
 	this.initHidden = () => {
 		if (prop.mode === "draggable") {
 			current.body.style.top = null;

@@ -1,0 +1,58 @@
+/* ---- Pio Interaction Extension Styles ---- */
+
+/* Hitokoto button - speech bubble icon (consistent with Pio's SVG style) */
+.pio-action .pio-hitokoto {
+	background-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTUxMiA2NEMyNjQuNiA2NCA2NCAyNjQuNiA2NCA1MTJzMjAwLjYgNDQ4IDQ0OCA0NDhjMjYuNiAwIDUyLTQuMiA3NS44LTEydjBsNzIgNjB2LTg2Yzc2LjgtNjAuMiAxMjYuMi0xNTguOCAxMjYuMi0yNjhDOTIwIDI2NC42IDcxNS40IDY0IDUxMiA2NHptLTMyIDE4NGMwIDAgNDggMzIgNDggODBzLTQ4IDgwLTQ4IDgwYy0xNy42IDAgMzItNjQuNCAzMi04MHMtNDkuNi04MC0zMi04MHptMTI4IDBjMCAwIDQ4IDMyIDQ4IDg0cy00OCA4MC00OCA4MGMtMTcuNiAwIDMyLTY0IDMyLTgycy00OS44LTgyLTMyLTgyem0tMTc2IDMyMGMtMzUuMiAwLTY0LTI4LjgtNjQtNjRzMjguOC02NCA2NC02NCA2NCAyOC44IDY0IDY0LTI4LjggNjQtNjQgNjR6Ii8+PC9zdmc+);
+}
+
+/* Photo button - camera icon */
+.pio-action .pio-photo {
+	background-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTg2NCA0MDBoLTU2Yy0xNi0zMi0yNC00OC00MC02NEg1NjBsLTM4LjQtNTEuMkM1MDYuOCAyNjguOCA0OTYuNCAyNTYgNDgwIDI1NkgzODRjLTE2IDAtMjYuOCAxMi44LTMzLjYgMjguOEwzMTIgMzM2aC00OGMtNjQgMC0xMTIgNDgtMTEyIDExMnYzMjBjMCA2NCA0OCAxMTIgMTEyIDExMmg1NDQjYzY0IDAgMTEyLTQ4IDExMi0xMTJWNDcyYzAtNjQtNDgtMTEyLTExMi0xMTJ6TTUxMiA3MDRjLTg4IDAtMTYwLTcyLTE2MC0xNjBzNzItMTYwIDE2MC0xNjAgMTYwIDcyIDE2MCAxNjAtNzIgMTYwLTE2MCAxNjB6bTAtMjQ4Yy00OCAwLTg4IDQwLTg4IDg4czQwIDg4IDg4IDg4IDg4LTQwIDg4LTg4LTQwLTg4LTg4LTg4eiIvPjwvc3ZnPg==);
+}
+
+/* Photo flash effect */
+.pio-photo-flash {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 99999;
+	animation: pio-flash 0.5s ease-out;
+}
+
+@keyframes pio-flash {
+	0% { opacity: 0.8; }
+	100% { opacity: 0; }
+}
+
+/* Dialog shake animation for emphasis */
+.pio-dialog.shake {
+	animation: pio-shake 0.5s ease-in-out;
+}
+
+@keyframes pio-shake {
+	0%, 100% { transform: translateX(0); }
+	20%, 60% { transform: translateX(-4px); }
+	40%, 80% { transform: translateX(4px); }
+}
+
+/* Hitokoto loading state - subtle pulse animation */
+.pio-action .pio-hitokoto.loading {
+	animation: pio-pulse 1s ease-in-out infinite;
+}
+
+@keyframes pio-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.5; }
+}
+
+/* Ensure new buttons inherit Pio's action button style */
+.pio-action .pio-hitokoto:hover,
+.pio-action .pio-photo:hover {
+	opacity: 0.8;
+	filter: brightness(1.1);
+}

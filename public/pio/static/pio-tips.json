@@ -1,0 +1,59 @@
+{
+  "time": [
+    { "hour": "0-5", "text": ["你是夜猫子呀？这么晚还不睡觉，明天起的来嘛？", "深夜了呢，要注意休息哦~"] },
+    { "hour": "6-7", "text": "早上好！新的一天开始了~" },
+    { "hour": "8-11", "text": ["上午好！工作顺利嘛，不要久坐，多起来走动走动哦！", "上午精神满满！"] },
+    { "hour": "12-13", "text": "中午了，工作了一个上午，现在是午餐时间！" },
+    { "hour": "14-17", "text": ["午后很容易犯困呢，今天的运动目标完成了吗？", "下午好，继续加油吧~"] },
+    { "hour": "18-19", "text": "傍晚了！窗外夕阳的景色很美丽呢，最美不过夕阳红~" },
+    { "hour": "20-21", "text": ["晚上好，今天过得怎么样？", "晚上好呀，辛苦一天了~"] },
+    { "hour": "22-23", "text": ["已经这么晚了呀，早点休息吧，晚安~", "深夜时要爱护眼睛呀！"] }
+  ],
+  "seasons": [
+    { "date": "01/01", "text": "<span>元旦</span>了呢，新的一年又开始了，今年是{year}年～" },
+    { "date": "02/14", "text": "又是一年<span>情人节</span>，{year}年找到对象了嘛～" },
+    { "date": "03/08", "text": "今天是<span>国际妇女节</span>！" },
+    { "date": "05/01", "text": "今天是<span>五一劳动节</span>，计划好假期去哪里了吗～" },
+    { "date": "06/01", "text": "<span>儿童节</span>了呢，快活的时光总是短暂，要是永远长不大该多好啊…" },
+    { "date": "09/10", "text": "<span>教师节</span>，在学校要给老师问声好呀～" },
+    { "date": "10/01", "text": "<span>国庆节</span>到了，为祖国母亲庆生！" },
+    { "date": "11/05-11/12", "text": "今年的<span>双十一</span>是和谁一起过的呢～" },
+    { "date": "12/25", "text": "<span>圣诞节</span>到了，Merry Christmas~" }
+  ],
+  "mouseover": [
+    { "selector": "#scheme-switch", "type": "hover", "text": ["切换明暗主题？让我也换个造型吧~", "想换个风格吗？"] },
+    { "selector": "#search-switch, #search-bar", "type": "hover", "text": ["想搜索点什么吗？", "找不到想看的内容？搜索看看吧！"] },
+    { "selector": "#back-to-top-btn", "type": "hover", "text": ["点它就可以回到顶部啦！", "又回到最初的起点～"] },
+    { "selector": "#floating-toc-btn, #toc, #mobile-toc-switch", "type": "hover", "text": ["看一下文章目录吧~", "想快速定位到某个段落吗？"] },
+    { "selector": ".friend-card", "type": "link", "text": ["要看看 $1 的网站吗？", "去 $1 逛逛吧~"] },
+    { "selector": ".dropdown-item", "type": "hover", "text": ["快看看这里都有什么呢？"] },
+    { "selector": ".mobile-menu-item", "type": "hover", "text": ["想去哪里逛逛呢？"] },
+    { "selector": "#post-list-container .card-base a.text-3xl", "type": "hover", "text": ["要看看这篇文章吗？", "这篇看起来不错哦~", "$1 说的是什么呢？点进去看看吧！"] }
+  ],
+  "click": [],
+  "message": {
+    "idle": [
+      "好无聊啊，快来陪我玩~",
+      "你在看什么呢？可以告诉我吗？",
+      "戳我试试看~",
+      "我在这里等你好久了~",
+      "要不要看看其他模型？点击上方的按钮切换哦~",
+      "今天天气怎么样？",
+      "嗯...有什么想聊的吗？",
+      "打起精神来！加油加油~",
+      "想我了吗？我一直在这里哦~",
+      "好久不见，日子过得好快呢……",
+      "大坏蛋！你都多久没理人家了呀，嘤嘤嘤～",
+      "拿小拳拳锤你胸口！"
+    ],
+    "console": "哈哈，你打开了控制台，是想要看看我的小秘密吗？",
+    "copy": "你都复制了些什么呀，转载要记得加上出处哦！",
+    "visibilityChange": "哇，你终于回来了～",
+    "hitokotoError": "一言服务好像出了点问题，稍后再试试吧~",
+    "hitokotoFrom": "这句一言来自 <span>「$1」</span>，是 <span>$2</span> 在 hitokoto.cn 投稿的。",
+    "photo": ["照好了嘛，是不是很可爱呢？", "拍完啦！看看拍得怎么样~"],
+    "photoError": "拍照失败了...QWQ",
+    "referrer": "Hello！来自 <span>$1</span> 的朋友",
+    "welcome": "欢迎阅读<span>「$1」</span>"
+  }
+}

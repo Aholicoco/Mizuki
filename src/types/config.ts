@@ -455,6 +455,7 @@ export type PioConfig = {
 			text?: string; // 自定义文本
 		}>;
 	};
+		interaction?: import("./pio-tips").PioInteractionConfig; // 交互增强配置
 };
 
 /**

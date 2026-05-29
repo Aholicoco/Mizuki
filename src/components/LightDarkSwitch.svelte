@@ -11,67 +11,55 @@ let isChanging = false;
 
 onMount(() => {
     mode = getStoredTheme();
+
+    // 监听Swup的内容替换事件
+    const handleContentReplace = () => {
+        // 使用requestAnimationFrame确保在下一帧更新状态，避免渲染冲突
+        requestAnimationFrame(() => {
+            const newMode = getStoredTheme();
+            if (mode !== newMode) {
+                mode = newMode;
+            }
+        });
+    };
+
+    // 检查Swup是否已经加载
+    if ((window as any).swup && (window as any).swup.hooks) {
+        (window as any).swup.hooks.on("content:replace", handleContentReplace);
+    } else {
+        document.addEventListener("swup:enable", () => {
+            if ((window as any).swup && (window as any).swup.hooks) {
+                (window as any).swup.hooks.on("content:replace", handleContentReplace);
+            }
+        });
+    }
+
+    // 页面加载完成后也同步一次状态
+    document.addEventListener("DOMContentLoaded", () => {
+        requestAnimationFrame(() => {
+            const newMode = getStoredTheme();
+            if (mode !== newMode) {
+                mode = newMode;
+            }
+        });
+    });
 });
 
 function switchScheme(newMode: LIGHT_DARK_MODE) {
-	// 防止连续快速点击
-	if (isChanging) return;
-
-	isChanging = true;
-	mode = newMode;
-	setTheme(newMode);
-
-	// 50ms 后重置状态，防止过快切换
-	setTimeout(() => {
-		isChanging = false;
-	}, 50);
+    if (isChanging) return;
+    isChanging = true;
+    mode = newMode;
+    setTheme(newMode);
+    setTimeout(() => { isChanging = false; }, 50);
 }
 
 function toggleScheme() {
-	if (isChanging) return;
-
-	let i = 0;
-	for (; i < seq.length; i++) {
-		if (seq[i] === mode) {
-			break;
-		}
-	}
-	switchScheme(seq[(i + 1) % seq.length]);
-}
-
-// 添加Swup钩子监听，确保在页面切换后同步主题状态
-if (typeof window !== "undefined") {
-	// 监听Swup的内容替换事件
-	const handleContentReplace = () => {
-		// 使用requestAnimationFrame确保在下一帧更新状态，避免渲染冲突
-		requestAnimationFrame(() => {
-			const newMode = getStoredTheme();
-			if (mode !== newMode) {
-				mode = newMode;
-			}
-		});
-	};
-
-	// 检查Swup是否已经加载
-	if ((window as any).swup && (window as any).swup.hooks) {
-		(window as any).swup.hooks.on("content:replace", handleContentReplace);
-	} else {
-		document.addEventListener("swup:enable", () => {
-			if ((window as any).swup && (window as any).swup.hooks) {
-				(window as any).swup.hooks.on("content:replace", handleContentReplace);
-			}
-		});
-	}
-
-	// 页面加载完成后也同步一次状态
-	document.addEventListener("DOMContentLoaded", () => {
-		requestAnimationFrame(() => {
-			const newMode = getStoredTheme();
-			if (mode !== newMode) {
-				mode = newMode;
-			}
-		});
-	});
+    if (isChanging) return;
+    let i = 0;
+    for (; i < seq.length; i++) {
+        if (seq[i] === mode) break;
+    }
+    switchScheme(seq[(i + 1) % seq.length]);
 }
 </script>
 

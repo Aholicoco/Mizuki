@@ -17,7 +17,10 @@
       "Bash(cat \"f:/XJJ/VScode/Project/Mizuki/.wrangler\"/*)",
       "Read(//f/XJJ/VScode/Project/live2d-widget/src/**)",
       "Read(//f/XJJ/VScode/Project/live2d-widget/**)",
-      "Bash(pnpm build *)"
+      "Bash(pnpm build *)",
+      "Bash(pnpm run *)",
+      "Bash(curl -s http://localhost:4322/)",
+      "Bash(curl -s http://localhost:4322/src/utils/pio-interaction.ts)"
     ],
     "additionalDirectories": [
       "C:\\Users\\27262\\.claude\\projects\\f--XJJ-VScode-Project-Mizuki\\90f966a0-9448-41f0-9f4c-394a7074d7fd\\tool-results"
